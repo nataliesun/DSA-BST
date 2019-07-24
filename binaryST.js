@@ -199,31 +199,62 @@ function tree(t) {
 // Write an algorithm to find the height of a binary search tree.What is the time complexity of your algorithm ?
 
 function heightBST(bst) {
-  const branchTotals = []
-
-  if(!bst) {
-    return 0
+ if(bst.left && bst.right) {
+    return Math.max(heightBST(bst.left), heightBST(bst.right)) + 1
   }
-
-  let count = 0
-  while(bst.left) {
-    count++
-    bst = bst.left
+  if(bst.left) {
+    return heightBST(bst.left) + 1
   }
-  branchTotals.push(count)
-
-  count = 0
-  while(bst.right) {
-    count++
-    bst = bst.right
+  if(bst.right) {
+    return heightBST(bst.right) + 1
   }
-  branchTotals.push(count)
-
-  return branchTotals
+  return 1;
 }
 
-console.log(heightBST(BST3))
+// console.log(heightBST(BST))
 
 // 6. Is it a BST ?
 //   Write an algorithm to check whether an arbitrary binary tree is a binary search tree, assuming the tree does not contain duplicates.
 
+function isBST(tree, min, max) {
+  if(tree.key < min)
+    return false;
+  if(tree.key > max)
+    return false;
+  if(tree.left && isBST(tree.right, tree.key, min))
+    return false;
+  if(tree.right && isBST(tree.left, tree.key, max))
+   return false;
+return true
+}
+
+function main(){
+  let Min = Number.MIN_VALUE;
+  let Max = Number.MAX_VALUE;
+  isBST(BST,Min,Max)
+}
+
+// 7. 3rd largest node
+// Write an algorithm to find the 3rd largest node in a binary search tree.
+
+function largest(tree, state) {
+  if(tree.right){
+    largest(tree.right, state);
+    if(state.result) return;
+  }
+  if(!--state.n) {
+    state.result = tree.key;
+    return
+  }
+  if(tree.left){
+    largest(tree.left, state)
+  }
+}
+function third_largest(tree) {
+  //Special case: empty tree.
+  if (tree.key == null)
+      return null;
+  let state = {n: 3, result: null};
+  largest(tree, state);
+  return state.result;
+}
